@@ -24,7 +24,7 @@ struct Pose
 struct Twist
 {
     float u = 0;
-    float v = 0; // This will always be 0 in the robot frame.
+    float v = 0; // This will always be 0 in the robot frame. 
     float omega = 0;
 
     Twist(void) {}

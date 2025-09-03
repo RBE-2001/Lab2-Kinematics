@@ -30,13 +30,7 @@ void Robot::RobotLoop(void)
     Twist velocity;
     if(chassis.ChassisLoop(velocity))
     {
-        // We do FK regardless of state
-        UpdatePose(velocity);
-        chassis.SetMotorEfforts(220,-220);
-    Twist velocity;
-    if(chassis.ChassisLoop(velocity))
-    {
-        // Serial.println("Chassis in CHASSIE LOOP");
+
         // We do FK regardless of state
         UpdatePose(velocity);
         //chassis.SetMotorEfforts(220,-220);
@@ -54,17 +48,10 @@ void Robot::RobotLoop(void)
             if(CheckReachedDestination()) HandleDestination();
         }
     }
-        /**
-         * Here, we break with tradition and only call these functions if we're in the 
-         * DRIVE_TO_POINT state. CheckReachedDestination() is expensive, so we don't want
-         * to do all the maths when we don't need to.
-         * 
-         * While we're at it, we'll toss DriveToPoint() in, as well.
-         */ 
-        if(robotState == ROBOT_DRIVE_TO_POINT)
-        {
-            DriveToPoint();
-            if(CheckReachedDestination()) HandleDestination();
-        }   
-    }
+}
+
+
+void UpdatePose(const Twist& u)
+{
+    
 }
