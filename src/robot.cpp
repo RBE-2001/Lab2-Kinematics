@@ -3,7 +3,7 @@
 void Robot::InitializeRobot(void)
 {
     chassis.InititalizeChassis();
-
+    Serial.println("Robot initialized.");
     /**
      * TODO: Set pin 13 HIGH when navigating and LOW when destination is reached.
      * Need to set as OUTPUT here.
@@ -30,9 +30,10 @@ void Robot::RobotLoop(void)
     Twist velocity;
     if(chassis.ChassisLoop(velocity))
     {
+
         // We do FK regardless of state
         UpdatePose(velocity);
-        chassis.SetMotorEfforts(220,-220);
+        //chassis.SetMotorEfforts(220,-220);
         
         /**
          * Here, we break with tradition and only call these functions if we're in the 
