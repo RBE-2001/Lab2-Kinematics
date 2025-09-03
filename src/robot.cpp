@@ -24,27 +24,28 @@ void Robot::EnterIdleState(void)
 */
 void Robot::RobotLoop(void) 
 {
+    chassis.SetMotorEfforts(100,100);
      /**
      * Run the chassis loop, which handles low-level control.
      */
-    Twist velocity;
-    if(chassis.ChassisLoop(velocity))
-    {
-        // We do FK regardless of state
-        UpdatePose(velocity);
-        chassis.SetMotorEfforts(220,-220);
+    // Twist velocity;
+    // if(chassis.ChassisLoop(velocity))
+    // {
+    //     // We do FK regardless of state
+    //     UpdatePose(velocity);
+    //     chassis.SetMotorEfforts(220,-220);
         
-        /**
-         * Here, we break with tradition and only call these functions if we're in the 
-         * DRIVE_TO_POINT state. CheckReachedDestination() is expensive, so we don't want
-         * to do all the maths when we don't need to.
-         * 
-         * While we're at it, we'll toss DriveToPoint() in, as well.
-         */ 
-        if(robotState == ROBOT_DRIVE_TO_POINT)
-        {
-            DriveToPoint();
-            if(CheckReachedDestination()) HandleDestination();
-        }
-    }
+    //     /**
+    //      * Here, we break with tradition and only call these functions if we're in the 
+    //      * DRIVE_TO_POINT state. CheckReachedDestination() is expensive, so we don't want
+    //      * to do all the maths when we don't need to.
+    //      * 
+    //      * While we're at it, we'll toss DriveToPoint() in, as well.
+    //      */ 
+    //     if(robotState == ROBOT_DRIVE_TO_POINT)
+    //     {
+    //         DriveToPoint();
+    //         if(CheckReachedDestination()) HandleDestination();
+    //     }
+    // }
 }
