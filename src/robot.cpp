@@ -49,9 +49,3 @@ void Robot::RobotLoop(void)
         }
     }
 }
-
-
-void UpdatePose(const Twist& u)
-{
-    
-}

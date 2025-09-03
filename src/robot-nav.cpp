@@ -6,6 +6,11 @@
 
 void Robot::UpdatePose(const Twist& twist)
 {
+    // TODO: backed 20 for ms
+    int deltaTime = 20 / 1000.0;
+    currPose.x += twist.u * cos(currPose.theta) * deltaTime;
+    currPose.y += twist.u * sin(currPose.theta) * deltaTime;
+    currPose.theta += twist.omega * deltaTime;
     /**
      * TODO: Add your FK algorithm to update currPose here.
      */

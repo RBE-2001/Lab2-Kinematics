@@ -38,7 +38,7 @@ protected:
     void EnterIdleState(void);
 
     // /* Navigation methods.*/
-    void UpdatePose(const Twist& u);
+    void UpdatePose(const Pose& u);
     void SetDestination(const Pose& destination);
     void DriveToPoint(void);
     bool CheckReachedDestination(void);
