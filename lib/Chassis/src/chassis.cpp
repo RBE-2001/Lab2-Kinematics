@@ -144,7 +144,7 @@ Twist Chassis::CalcOdomFromWheelMotion(void)
     int rightMotorVel = (rightMotor.speed / RIGHT_TICKS_PER_CM);  //converts angular velocity in encoder-ticks/ms to cm/ms 
 
     velocity.u = ((leftMotorVel + rightMotorVel) / 2); //robots velocity in cm/ms
-    velocity.omega = ((leftMotorVel - rightMotorVel) / ROBOT_RADIUS); //robots angular velocity in cm/ms
+    velocity.omega = ((leftMotorVel - rightMotorVel) / ROBOT_RADIUS); //robots angular velocity in 1/ms
 
 
 #ifdef __NAV_DEBUG__
