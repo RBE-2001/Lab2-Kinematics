@@ -140,19 +140,12 @@ void Chassis::SetMotorEfforts(int16_t left, int16_t right)
 Twist Chassis::CalcOdomFromWheelMotion(void)
 {
     Twist velocity;
-    int leftMotorDist = (leftMotor.speed / LEFT_TICKS_PER_CM);
-    int rightMotorDist = (rightMotor.speed / RIGHT_TICKS_PER_CM);
-    int sec = CONTROL_LOOP_PERIOD_MS / 1000.0;
+    int leftMotorVel = (leftMotor.speed / LEFT_TICKS_PER_CM); //converts angular velocity in encoder-ticks/ms to cm/ms 
+    int rightMotorVel = (rightMotor.speed / RIGHT_TICKS_PER_CM);  //converts angular velocity in encoder-ticks/ms to cm/ms 
 
-    velocity.u = ((leftMotorDist + rightMotorDist) / 2) * sec;
-    velocity.omega = ((leftMotorDist - rightMotorDist) * sec) / ROBOT_RADIUS;
-    
-    /**
-     * TODO: Calculate velocities from wheel motion, which are held in leftMotor.spped and rightMotor.speed.
-     * Note that you might want to calculate the deltas instead of speeds (to save some floating point maths). 
-     * 
-     * In that case, you should return a Pose instead of a Twist.
-     */
+    velocity.u = ((leftMotorVel + rightMotorVel) / 2); //robots velocity in cm/ms
+    velocity.omega = ((leftMotorVel - rightMotorVel) / ROBOT_RADIUS); //robots angular velocity in cm/ms
+
 
 #ifdef __NAV_DEBUG__
     TeleplotPrint("u", velocity.u);
