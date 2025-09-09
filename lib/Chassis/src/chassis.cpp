@@ -140,11 +140,12 @@ void Chassis::SetMotorEfforts(int16_t left, int16_t right)
 Twist Chassis::CalcOdomFromWheelMotion(void)
 {
     Twist velocity;
-    int leftMotorVel = (leftMotor.speed / LEFT_TICKS_PER_CM); //converts angular velocity in encoder-ticks/ms to cm/ms 
-    int rightMotorVel = (rightMotor.speed / RIGHT_TICKS_PER_CM);  //converts angular velocity in encoder-ticks/ms to cm/ms 
+    float interval_sec = CONTROL_LOOP_PERIOD_MS / 1000.0; 
+    float leftMotorVel = (leftMotor.speed / interval_sec / LEFT_TICKS_PER_CM); //cm/s
+    float rightMotorVel = (rightMotor.speed / interval_sec / RIGHT_TICKS_PER_CM); //cm/s
 
-    velocity.u = ((leftMotorVel + rightMotorVel) / 2); //robots velocity in cm/ms
-    velocity.omega = ((leftMotorVel - rightMotorVel) / ROBOT_RADIUS); //robots angular velocity in 1/ms
+    velocity.u = ((leftMotorVel + rightMotorVel) / 2.0); // cm/s
+    velocity.omega = ((leftMotorVel - rightMotorVel) / ROBOT_RADIUS); //rad/s
 
 
 #ifdef __NAV_DEBUG__
