@@ -7,10 +7,10 @@
 void Robot::UpdatePose(const Twist& twist)
 {
     // TODO: backed 20 for ms
-    int deltaTime = 20 / 1000.0;
-    currPose.x += twist.u * cos(currPose.theta) * deltaTime;
-    currPose.y += twist.u * sin(currPose.theta) * deltaTime;
-    currPose.theta += twist.omega * deltaTime;
+    int deltaTime = 20; //ms
+    currPose.x += twist.u * cos(currPose.theta) * deltaTime; // cm
+    currPose.y += twist.u * sin(currPose.theta) * deltaTime; // cm
+    currPose.theta += twist.omega * deltaTime; // radians
     /**
      * TODO: Add your FK algorithm to update currPose here.
      */
