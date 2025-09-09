@@ -145,7 +145,7 @@ Twist Chassis::CalcOdomFromWheelMotion(void)
     float rightMotorVel = (rightMotor.speed / interval_sec / RIGHT_TICKS_PER_CM); //cm/s
 
     velocity.u = ((leftMotorVel + rightMotorVel) / 2.0); // cm/s
-    velocity.omega = ((leftMotorVel - rightMotorVel) / ROBOT_RADIUS); //rad/s
+    velocity.omega = ((leftMotorVel - rightMotorVel) / (ROBOT_RADIUS * 2)); //rad/s
 
 
 #ifdef __NAV_DEBUG__

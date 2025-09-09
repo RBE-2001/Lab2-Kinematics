@@ -18,7 +18,7 @@ void Robot::UpdatePose(const Twist& twist)
 #ifdef __NAV_DEBUG__
     TeleplotPrint("x", currPose.x);
     TeleplotPrint("y", currPose.y);
-    TeleplotPrint("theta", currPose.theta);
+    TeleplotPrint("theta", (currPose.theta / 2.0 / 3.14159 * 360.0));
 #endif
 
 }
@@ -58,6 +58,7 @@ void Robot::DriveToPoint(void)
         /**
          * TODO: Add your IK algorithm here. 
          */
+
 
 #ifdef __NAV_DEBUG__
         // Print useful stuff here.
