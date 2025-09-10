@@ -44,6 +44,6 @@ protected:
     bool CheckReachedDestination(void);
     void HandleDestination(void);
     
-    float DistancToTarget(void);
+    float DistanceToTarget(void);
     float AngleToTarget(void);
 };

@@ -48,7 +48,7 @@ void Robot::SetDestination(const Pose &dest)
 bool Robot::CheckReachedDestination(void)
 {
     bool retVal = false;
-    float distance = DistancToTarget();
+    float distance = DistanceToTarget();
 
     if(distance < 0.50) { //mm
         retVal = true;
@@ -114,7 +114,7 @@ void Robot::HandleDestination(void)
     chassis.Stop();
 }
 
-float Robot::DistancToTarget(void)
+float Robot::DistanceToTarget(void)
 {
     float dx = destPose.x - currPose.x;
     float dy = destPose.y - currPose.y;
