@@ -1,5 +1,12 @@
 #include "robot.h"
 
+std::vector<Pose> points = {
+    {30, 30, 0},
+    {-30, 30, 0},
+    {30, -30, 900},
+    {0, 0, 0}
+};
+
 void Robot::InitializeRobot(void)
 {
     chassis.InititalizeChassis();
@@ -8,16 +15,12 @@ void Robot::InitializeRobot(void)
      * TODO: Set pin 13 HIGH when navigating and LOW when destination is reached.
      * Need to set as OUTPUT here.
      */
-
+    pinMode(13, OUTPUT);
+    digitalWrite(13, LOW);
     // if button b
-    SetDestination(points[point_index]);
+    // SetDestination(points[0]);
 }
-Pose points[4] = {
-        {30, 30, 0},
-        {-30, 30, 0},
-        {30, -30, 900},
-        {0, 0, 0}
-    };
+
 void Robot::EnterIdleState(void)
 {
     chassis.Stop();
@@ -25,6 +28,9 @@ void Robot::EnterIdleState(void)
     Serial.println("-> IDLE");
     robotState = ROBOT_IDLE;
 }
+
+Romi32U4ButtonA buttonA;
+Romi32U4ButtonB buttonB;
 
 /**
  * The main loop for your robot. Process both synchronous events (motor control),
@@ -41,6 +47,9 @@ void Robot::RobotLoop(void)
         // We do FK regardless of state
         UpdatePose(velocity);
         
+        if (buttonA.getSingleDebouncedPress()) {
+            SetDestination(points[point_index]);
+        }
         /**
          * Here, we break with tradition and only call these functions if we're in the 
          * DRIVE_TO_POINT state. CheckReachedDestination() is expensive, so we don't want
@@ -53,9 +62,14 @@ void Robot::RobotLoop(void)
             DriveToPoint();
             if(CheckReachedDestination()) {
                 HandleDestination();
-                point_index = (point_index + 1);
-                if (point_index < sizeof(points)/sizeof(points[0]))
-                SetDestination(points[point_index]);
+
+                point_index ++;
+                if (point_index < points.size())
+                    SetDestination(points[point_index]);
+                else {
+                    EnterIdleState();
+                    point_index = 0;
+                }
             }
         }
     }

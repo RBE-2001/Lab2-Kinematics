@@ -2,6 +2,7 @@
 
 #include "chassis.h"
 #include <vector>
+#include "Romi32U4Buttons.h"
 
 class Robot
 {

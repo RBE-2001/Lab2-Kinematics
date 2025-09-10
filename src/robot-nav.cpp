@@ -71,6 +71,7 @@ void Robot::DriveToPoint(void)
 {
     if(robotState == ROBOT_DRIVE_TO_POINT)
     {
+        digitalWrite(13, HIGH);
         // Simple P controller
         // ------------ Constants ------------
         
@@ -140,4 +141,5 @@ void Robot::HandleDestination(void)
 {
     robotState = ROBOT_IDLE;
     chassis.Stop();
+    digitalWrite(13, LOW);
 }
