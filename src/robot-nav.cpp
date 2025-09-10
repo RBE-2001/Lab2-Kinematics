@@ -91,7 +91,7 @@ void Robot::DriveToPoint(void)
 #ifdef __NAV_DEBUG__
         TeleplotPrint("x_dest", destPose.x - currPose.x);
         TeleplotPrint("y_dest", destPose.y - currPose.y);
-        TeleplotPrint("dist", DistancToTarget());
+        TeleplotPrint("dist", DistanceToTarget());
         TeleplotPrint("angle", AngleToTarget());
         TeleplotPrint("v", v);
         TeleplotPrint("w", w);
