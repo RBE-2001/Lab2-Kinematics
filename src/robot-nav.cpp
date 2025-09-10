@@ -22,7 +22,7 @@ void Robot::UpdatePose(const Twist &twist)
 #ifdef __NAV_DEBUG__
     TeleplotPrint("x", currPose.x);
     TeleplotPrint("y", currPose.y);
-    TeleplotPrint("theta", (currPose.theta / 2.0 / 3.14159 * 360.0));
+    TeleplotPrint("theta", (currPose.theta));
 #endif
 
 }
@@ -50,7 +50,7 @@ bool Robot::CheckReachedDestination(void)
     bool retVal = false;
     float distance = DistancToTarget();
 
-    if(distance < 5.0) { //cm
+    if(distance < 0.50) { //mm
         retVal = true;
     }
 
@@ -61,32 +61,43 @@ void Robot::DriveToPoint(void)
 {
     if(robotState == ROBOT_DRIVE_TO_POINT)
     {
-        /**
-         * TODO: Add your IK algorithm here.
-         */
+        // Simple P controller
+        float kp_linear = 200.0; // Proportional gain for linear velocity
+        float kp_angular = 500.0; // Proportional gain for angular velocity
 
-        float errorX = destPose.x - currPose.x;
-        float errorY = destPose.y - currPose.y;
+        float dx = destPose.x - currPose.x;
+        float dy = destPose.y - currPose.y;
 
-        float kp_linear = 1.0; // Proportional gain for linear velocity
-        float kp_angular = 2.0; // Proportional gain for angular velocity
+        // Euclidean distance (always positive)
+        float distance_to_target = sqrt(dx*dx + dy*dy);
+        // Angle to the target in the robot frame
+        float angle_to_target = atan2(dy, dx) - currPose.theta;
 
-        float v = kp_linear * DistancToTarget();
-        float w = kp_angular * AngleToTarget();
+        float v = kp_linear * distance_to_target;
+        if (v > 200) v = 200; // Cap the maximum linear velocity
+        if (v < -200) v = -200; // Cap the minimum linear velocity
 
-        float left_Wheel_effort = v - w;
-        float right_Wheel_effort = v + w;
+        float w = kp_angular * angle_to_target;
+
+        if (distance_to_target < 5.0) {
+            w = 0; // Stop turning when close to the target
+        }
+
+        float left_Wheel_effort = v + w;
+        float right_Wheel_effort = v - w;
         
 
 
 #ifdef __NAV_DEBUG__
+        TeleplotPrint("x_dest", destPose.x - currPose.x);
+        TeleplotPrint("y_dest", destPose.y - currPose.y);
+        TeleplotPrint("dist", DistancToTarget());
+        TeleplotPrint("angle", AngleToTarget());
         TeleplotPrint("v", v);
         TeleplotPrint("w", w);
-        TeleplotPrint("left", left_Wheel_effort);
-        TeleplotPrint("right", right_Wheel_effort);
 #endif
 
-        chassis.SetMotorEfforts(left_Wheel_effort, right_Wheel_effort);
+        //chassis.SetMotorEfforts(left_Wheel_effort, right_Wheel_effort);
         /**
          * TODO: Call chassis.SetMotorEfforts() to command the motion, based on your calculations above.
          */
@@ -99,16 +110,22 @@ void Robot::DriveToPoint(void)
 
 void Robot::HandleDestination(void)
 {
-    /**
-     * TODO: Stop and change state. Turn off LED.
-     */
+    robotState = ROBOT_IDLE;
+    chassis.Stop();
 }
 
 float Robot::DistancToTarget(void)
 {
-    return sqrt(pow(destPose.x - currPose.x, 2) + pow(destPose.y - currPose.y, 2));
+    float dx = destPose.x - currPose.x;
+    float dy = destPose.y - currPose.y;
+
+    // Euclidean distance (always positive)
+    float distance = sqrt(dx*dx + dy*dy);
+
+    return distance;
 }
+
 float Robot::AngleToTarget(void)
 {
-    return atan2(destPose.x - currPose.x, destPose.y - currPose.y);
+    return atan2(destPose.x - currPose.x, destPose.y - currPose.y) - currPose.theta;
 }

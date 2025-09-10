@@ -9,7 +9,7 @@ void Robot::InitializeRobot(void)
      * Need to set as OUTPUT here.
      */
 
-    SetDestination(Pose{50, 0, 0});
+    SetDestination(Pose{30, -30, 0});
 }
 
 void Robot::EnterIdleState(void)
