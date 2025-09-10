@@ -9,9 +9,15 @@ void Robot::InitializeRobot(void)
      * Need to set as OUTPUT here.
      */
 
-    SetDestination(Pose{30, -30, 0});
+    // if button b
+    SetDestination(points[point_index]);
 }
-
+Pose points[4] = {
+        {30, 30, 0},
+        {-30, 30, 0},
+        {30, -30, 900},
+        {0, 0, 0}
+    };
 void Robot::EnterIdleState(void)
 {
     chassis.Stop();
@@ -32,7 +38,6 @@ void Robot::RobotLoop(void)
     Twist velocity;
     if(chassis.ChassisLoop(velocity))
     {
-
         // We do FK regardless of state
         UpdatePose(velocity);
         
@@ -46,7 +51,12 @@ void Robot::RobotLoop(void)
         if(robotState == ROBOT_DRIVE_TO_POINT)
         {
             DriveToPoint();
-            if(CheckReachedDestination()) HandleDestination();
+            if(CheckReachedDestination()) {
+                HandleDestination();
+                point_index = (point_index + 1);
+                if (point_index < sizeof(points)/sizeof(points[0]))
+                SetDestination(points[point_index]);
+            }
         }
     }
 }

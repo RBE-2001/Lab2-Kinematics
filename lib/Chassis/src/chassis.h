@@ -39,7 +39,7 @@ public:
 public:
     Twist CalcOdomFromWheelMotion(void);
 
-
+    /* Set the motor efforts, in the range -420 to 420. */
     void SetMotorEfforts(int16_t, int16_t);
 
     void Stop(void) { SetMotorEfforts(0, 0);} 

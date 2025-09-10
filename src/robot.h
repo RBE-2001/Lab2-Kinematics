@@ -1,6 +1,7 @@
 #pragma once
 
 #include "chassis.h"
+#include <vector>
 
 class Robot
 {
@@ -12,7 +13,7 @@ protected:
     enum ROBOT_STATE 
     {
         ROBOT_IDLE,
-        ROBOT_DRIVE_TO_POINT,
+        ROBOT_DRIVE_TO_POINT, 
     };
     ROBOT_STATE robotState = ROBOT_IDLE;
 
@@ -27,6 +28,8 @@ protected:
      */
     Pose currPose;
     Pose destPose;
+
+    int point_index = 0;
     
 public:
     Robot(void) {keyString.reserve(10);}
@@ -36,14 +39,14 @@ public:
 protected:
     /* State changes */    
     void EnterIdleState(void);
+    void SetDestination(const Pose& destination);
+
 
     // /* Navigation methods.*/
     void UpdatePose(const Twist& u);
-    void SetDestination(const Pose& destination);
     void DriveToPoint(void);
     bool CheckReachedDestination(void);
     void HandleDestination(void);
-    
-    float DistanceToTarget(void);
-    float AngleToTarget(void);
+
+    bool Drive_Points(void);
 };

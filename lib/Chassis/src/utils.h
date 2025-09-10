@@ -2,6 +2,10 @@
 #include <Arduino.h>
 
 void TeleplotPrint(const char* var, float value);
+float NormalizeAngle(float angle);
+
+template<typename T>
+T clamp(T value, T minVal, T maxVal);
 
 /**
  * Pose includes information about the 2D pose of a robot: x, y, and heading.
