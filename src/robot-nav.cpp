@@ -29,9 +29,8 @@ void Robot::UpdatePose(const Twist &twist)
  */
 void Robot::SetDestination(const Pose &dest)
 {
-    /**
-     * TODO: Turn on LED, as well.
-     */
+    digitalWrite(13, HIGH);
+    
     Serial.print("Setting dest to: ");
     Serial.print(dest.x);
     Serial.print(", ");
@@ -71,7 +70,6 @@ void Robot::DriveToPoint(void)
 {
     if(robotState == ROBOT_DRIVE_TO_POINT)
     {
-        digitalWrite(13, HIGH);
         // Simple P controller
         // ------------ Constants ------------
         
