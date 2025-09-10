@@ -43,4 +43,6 @@ protected:
     void DriveToPoint(void);
     bool CheckReachedDestination(void);
     void HandleDestination(void);
+    float DistancToTarget(void);
+    float AngleToTarget(void);
 };
