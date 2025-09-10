@@ -11,6 +11,10 @@ void Robot::UpdatePose(const Twist &twist)
     currPose.x += twist.u * cos(currPose.theta) * deltaTime; // cm
     currPose.y += twist.u * sin(currPose.theta) * deltaTime; // cm
     currPose.theta += twist.omega * deltaTime;               // rad
+
+    // Normalize theta to the range [-pi, pi]
+    if (currPose.theta > M_PI) currPose.theta -= 2*M_PI;
+    if (currPose.theta < -M_PI) currPose.theta += 2*M_PI;
     /**
      * TODO: Add your FK algorithm to update currPose here.
      */
@@ -44,7 +48,7 @@ void Robot::SetDestination(const Pose &dest)
 bool Robot::CheckReachedDestination(void)
 {
     bool retVal = false;
-    float distance = sqrt(pow(destPose.x - currPose.x, 2) + pow(destPose.y - currPose.y, 2));
+    float distance = DistancToTarget();
 
     if(distance < 5.0) { //cm
         retVal = true;
@@ -63,13 +67,26 @@ void Robot::DriveToPoint(void)
 
         float errorX = destPose.x - currPose.x;
         float errorY = destPose.y - currPose.y;
+
+        float kp_linear = 1.0; // Proportional gain for linear velocity
+        float kp_angular = 2.0; // Proportional gain for angular velocity
+
+        float v = kp_linear * DistancToTarget();
+        float w = kp_angular * AngleToTarget();
+
+        float left_Wheel_effort = v - w;
+        float right_Wheel_effort = v + w;
         
 
 
 #ifdef __NAV_DEBUG__
-        // Print useful stuff here.
+        TeleplotPrint("v", v);
+        TeleplotPrint("w", w);
+        TeleplotPrint("left", left_Wheel_effort);
+        TeleplotPrint("right", right_Wheel_effort);
 #endif
 
+        chassis.SetMotorEfforts(left_Wheel_effort, right_Wheel_effort);
         /**
          * TODO: Call chassis.SetMotorEfforts() to command the motion, based on your calculations above.
          */
@@ -85,4 +102,13 @@ void Robot::HandleDestination(void)
     /**
      * TODO: Stop and change state. Turn off LED.
      */
+}
+
+float Robot::DistancToTarget(void)
+{
+    return sqrt(pow(destPose.x - currPose.x, 2) + pow(destPose.y - currPose.y, 2));
+}
+float Robot::AngleToTarget(void)
+{
+    return atan2(destPose.x - currPose.x, destPose.y - currPose.y);
 }

@@ -8,6 +8,8 @@ void Robot::InitializeRobot(void)
      * TODO: Set pin 13 HIGH when navigating and LOW when destination is reached.
      * Need to set as OUTPUT here.
      */
+
+    SetDestination(Pose{50, 0, 0});
 }
 
 void Robot::EnterIdleState(void)
@@ -33,7 +35,6 @@ void Robot::RobotLoop(void)
 
         // We do FK regardless of state
         UpdatePose(velocity);
-        Serial.println("keyblard" + keyString);
         
         /**
          * Here, we break with tradition and only call these functions if we're in the 
