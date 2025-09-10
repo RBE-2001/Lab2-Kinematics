@@ -48,7 +48,7 @@ void Robot::SetDestination(const Pose &dest)
 bool Robot::CheckReachedDestination(void)
 {
     bool retVal = false;
-    float distance = DistancToTarget();
+    float distance = DistanceToTarget();
 
     if(distance < 5.0) { //cm
         retVal = true;
@@ -71,7 +71,7 @@ void Robot::DriveToPoint(void)
         float kp_linear = 1.0; // Proportional gain for linear velocity
         float kp_angular = 2.0; // Proportional gain for angular velocity
 
-        float v = kp_linear * DistancToTarget();
+        float v = kp_linear * DistanceToTarget();
         float w = kp_angular * AngleToTarget();
 
         float left_Wheel_effort = v - w;
@@ -104,7 +104,7 @@ void Robot::HandleDestination(void)
      */
 }
 
-float Robot::DistancToTarget(void)
+float Robot::DistanceToTarget(void)
 {
     return sqrt(pow(destPose.x - currPose.x, 2) + pow(destPose.y - currPose.y, 2));
 }
