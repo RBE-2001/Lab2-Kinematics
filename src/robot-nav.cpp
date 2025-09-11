@@ -10,8 +10,11 @@ void Robot::UpdatePose(const Twist &twist)
     float deltaTime = 0.020; // Default to control loop period
 
     // ------------ Update pose ------------
-    currPose.x += twist.u * cos(currPose.theta) * deltaTime; // cm
-    currPose.y += twist.u * sin(currPose.theta) * deltaTime; // cm
+    // allows second order odometry approximation
+    float theta_mid = currPose.theta + (twist.omega * deltaTime) / 2.0;
+
+    currPose.x += twist.u * cos(theta_mid) * deltaTime; // cm
+    currPose.y += twist.u * sin(theta_mid) * deltaTime; // cm
     currPose.theta += twist.omega * deltaTime;               // rad
     
     // Normalize theta to the range [-pi, pi]
@@ -95,7 +98,7 @@ void Robot::DriveToPoint(void)
         angle_to_target = NormalizeAngle(angle_to_target);
 
         // Allow reverse driving if target is behind
-        if (fabs(angle_to_target) > 3 * M_PI / 4) {
+        if (fabs(angle_to_target) >  M_PI / 2) {
             distance_to_target = -distance_to_target;
             angle_to_target = NormalizeAngle(angle_to_target + M_PI);
         }

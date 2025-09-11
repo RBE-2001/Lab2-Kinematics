@@ -62,7 +62,7 @@ void Robot::RobotLoop(void)
             DriveToPoint();
             if(CheckReachedDestination()) {
                 HandleDestination();
-
+                
                 point_index ++;
                 if (point_index < points.size())
                     SetDestination(points[point_index]);
