@@ -1,7 +1,6 @@
 /**
  * robot-nav.cpp is where you should put navigation routines.
  */
-
 #include "robot.h"
 
 void Robot::UpdatePose(const Twist &twist)

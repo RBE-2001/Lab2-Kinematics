@@ -43,7 +43,8 @@ protected:
     void SetDestination(const Pose& destination);
 
 
-    // /* Navigation methods.*/
+    // Navigation methods.
+
     void UpdatePose(const Twist& u);
     void DriveToPoint(void);
     bool CheckReachedDestination(void);
