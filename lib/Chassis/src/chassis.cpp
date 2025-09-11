@@ -144,13 +144,13 @@ Twist Chassis::CalcOdomFromWheelMotion(void)
     float leftMotorVel = (leftMotor.speed) * (1 / interval_sec) *  (1 / LEFT_TICKS_PER_CM); //cm/s
     float rightMotorVel = (rightMotor.speed) * (1 / interval_sec) * (1 / RIGHT_TICKS_PER_CM); //cm/s
 
-    velocity.u = (leftMotorVel + rightMotorVel) / 2.0; // cm/s
-    velocity.omega = (leftMotorVel - rightMotorVel) / (ROBOT_RADIUS * 2); //rad/s
+    velocity.u = (rightMotorVel + leftMotorVel) / 2.0; // cm/s
+    velocity.omega = (rightMotorVel - leftMotorVel) / (ROBOT_RADIUS * 2); //rad/s
 
 
 #ifdef __NAV_DEBUG__
-    TeleplotPrint("Robot: u", velocity.u);
-    TeleplotPrint("Robot: omega", velocity.omega);
+    TeleplotPrint("Robot_u", velocity.u);
+    TeleplotPrint("Robot_omega", velocity.omega);
 #endif
 
     return velocity;

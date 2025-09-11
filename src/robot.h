@@ -30,8 +30,16 @@ protected:
     Pose currPose;
     Pose destPose;
 
-    int point_index = 0;
-    
+    unsigned int point_index = 0;
+
+    std::vector<Pose> points = {
+        {30, 30, 0},
+        {60, 0, 0},
+        {30, -30, 0},
+        {-30, 30, 0},
+        {0, 0, 0}
+    };
+
 public:
     Robot(void) {keyString.reserve(10);}
     void InitializeRobot(void);

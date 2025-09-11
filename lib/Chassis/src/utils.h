@@ -1,11 +1,31 @@
 #pragma once
 #include <Arduino.h>
 
+/**
+ * Simple utility to print to Teleplot. 
+ * 
+ * Usage:
+ *   TeleplotPrint("var_name", value);
+ */
 void TeleplotPrint(const char* var, float value);
+
+/**
+ * Simple utility to print XY pairs to Teleplot. 
+ * 
+ * Usage:
+ *   TeleplotPrintXY("var_name", x_value, y_value);
+ */
+void TeleplotPrintXY(const char* var, float x, float y);
+
+/**
+ * Normalize an angle to the range [-pi, pi].
+ */
 float NormalizeAngle(float angle);
 
-template<typename T>
-T clamp(T value, T minVal, T maxVal);
+/**
+ * Clamp a value between a minimum and maximum.
+ */
+float clamp(float value, float minVal, float maxVal);
 
 /**
  * Pose includes information about the 2D pose of a robot: x, y, and heading.

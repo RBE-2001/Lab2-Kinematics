@@ -1,12 +1,5 @@
 #include "robot.h"
 
-std::vector<Pose> points = {
-    {30, 30, 0},
-    {-30, 30, 0},
-    {30, -30, 900},
-    {0, 0, 0}
-};
-
 void Robot::InitializeRobot(void)
 {
     chassis.InititalizeChassis();
@@ -48,8 +41,10 @@ void Robot::RobotLoop(void)
         UpdatePose(velocity);
         
         if (buttonA.getSingleDebouncedPress()) {
+            delay(250); //wait so you can move your finger
             SetDestination(points[point_index]);
         }
+
         /**
          * Here, we break with tradition and only call these functions if we're in the 
          * DRIVE_TO_POINT state. CheckReachedDestination() is expensive, so we don't want
@@ -62,14 +57,6 @@ void Robot::RobotLoop(void)
             DriveToPoint();
             if(CheckReachedDestination()) {
                 HandleDestination();
-                
-                point_index ++;
-                if (point_index < points.size())
-                    SetDestination(points[point_index]);
-                else {
-                    EnterIdleState();
-                    point_index = 0;
-                }
             }
         }
     }

@@ -20,9 +20,10 @@ void Robot::UpdatePose(const Twist &twist)
     currPose.theta = NormalizeAngle(currPose.theta);
     
 #ifdef __NAV_DEBUG__
-    TeleplotPrint("World: x", currPose.x);
-    TeleplotPrint("World: y", currPose.y);
-    TeleplotPrint("World: Theta", (currPose.theta));
+    TeleplotPrint("World_x", currPose.x);
+    TeleplotPrint("World_y", currPose.y);
+    TeleplotPrint("World_Theta", currPose.theta);
+    TeleplotPrintXY("World_XY", currPose.x, currPose.y);
 #endif
 }
 
@@ -51,12 +52,12 @@ void Robot::SetDestination(const Pose &dest)
 bool Robot::CheckReachedDestination(void)
 {
     bool retVal = true;
-    const float errorDistance = 2.0; //mm
-    const float angleError = .10; //radians (~6deg)
+    const float errorDistance = 3.0; //mm
+    // const float angleError = 0.10; //radians (~6deg)
 
     retVal = retVal && fabs(destPose.x - currPose.x) < errorDistance;
     retVal = retVal && fabs(destPose.y - currPose.y) < errorDistance;
-    retVal = retVal && fabs(destPose.theta - currPose.theta) < angleError;
+    // retVal = retVal && fabs(destPose.theta - currPose.theta) < angleError;
 
     return retVal;
 }
@@ -75,16 +76,17 @@ void Robot::DriveToPoint(void)
         // Simple P controller
         // ------------ Constants ------------
         
-        float kp_linear = 200.0; // Proportional gain for linear velocity
-        float kp_angular = 500.0; // Proportional gain for angular velocity
+        float kp_linear = 15.0; // 200 Proportional gain for linear velocity
+        float kp_angular = 300.0; // 400 Proportional gain for angular velocity
 
         float max_linear_velocity = 200.0; // Maximum linear velocity
 
-        // ------------ Errors --------------
+        // ------------ Errors ------------
         // Differences in position
         float dx = destPose.x - currPose.x;
         float dy = destPose.y - currPose.y;
 
+        // Difference in heading For alling to pose
         float dangle = destPose.theta - currPose.theta;
         dangle = NormalizeAngle(dangle);
 
@@ -97,29 +99,26 @@ void Robot::DriveToPoint(void)
         angle_to_target = NormalizeAngle(angle_to_target);
 
         // Allow reverse driving if target is behind
-        if (fabs(angle_to_target) >  M_PI / 2) {
+        if (fabs(angle_to_target) >  PI / 2) {
             distance_to_target = -distance_to_target;
-            angle_to_target = NormalizeAngle(angle_to_target + M_PI);
+            angle_to_target = NormalizeAngle(angle_to_target + PI);
         }
 
-        // ------------ Control --------------
+        // ------------ Control ------------
         float v = kp_linear * distance_to_target;
         v = clamp(v, -max_linear_velocity, max_linear_velocity);
 
-        float w;
-        if (fabs(distance_to_target) < 2.5) {
-            w = kp_angular * dangle; // align heading at the goal
-        } else {
-            w = kp_angular * angle_to_target;
-        }
+        float w = kp_angular * angle_to_target;
+        // Optional: align heading with pose when close to the goal
+        // if (fabs(distance_to_target) < 3.0) {
+        //     w = kp_angular * dangle; // align heading at the goal
+        // }
 
         // ------------ Actuation ------------
-        // Backwards kinematics for differential drive, might want to look into to fix
+        // Backwards kinematics for differential drive
         float right_Wheel_effort = v + w;
         float left_Wheel_effort = v - w;
         
-
-
 #ifdef __NAV_DEBUG__
         TeleplotPrint("x_to_dest", dx);
         TeleplotPrint("y_to_dest", dy);
@@ -131,7 +130,7 @@ void Robot::DriveToPoint(void)
         TeleplotPrint("v", v);
         TeleplotPrint("w", w);
 #endif
-        
+
         // Set the motor efforts
         chassis.SetMotorEfforts(left_Wheel_effort, right_Wheel_effort);
     }
@@ -139,7 +138,18 @@ void Robot::DriveToPoint(void)
 
 void Robot::HandleDestination(void)
 {
-    robotState = ROBOT_IDLE;
-    chassis.Stop();
+    // robotState = ROBOT_IDLE;
+    // chassis.Stop();
     digitalWrite(13, LOW);
+
+    point_index ++;
+    if (point_index < points.size())
+    {
+        delay(60);
+        SetDestination(points[point_index]);
+    }
+    else {
+        EnterIdleState();
+        point_index = 0;
+    }
 }
