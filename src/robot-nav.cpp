@@ -76,7 +76,7 @@ void Robot::DriveToPoint(void)
         // Simple P controller
         // ------------ Constants ------------
         
-        float kp_linear = 15.0; // 200 Proportional gain for linear velocity
+        float kp_linear = 25.0; // 200 Proportional gain for linear velocity
         float kp_angular = 300.0; // 400 Proportional gain for angular velocity
 
         float max_linear_velocity = 200.0; // Maximum linear velocity
