@@ -14,7 +14,7 @@ void Robot::UpdatePose(const Twist &twist)
 
     currPose.x += twist.u * cos(theta_mid) * deltaTime; // cm
     currPose.y += twist.u * sin(theta_mid) * deltaTime; // cm
-    currPose.theta += twist.omega * deltaTime;               // rad
+    currPose.theta += twist.omega * deltaTime;          // rad
     
     // Normalize theta to the range [-pi, pi]
     currPose.theta = NormalizeAngle(currPose.theta);
@@ -52,7 +52,7 @@ void Robot::SetDestination(const Pose &dest)
 bool Robot::CheckReachedDestination(void)
 {
     bool retVal = true;
-    const float errorDistance = 3.0; //mm
+    const float errorDistance = 3.0; //cm
     // const float angleError = 0.10; //radians (~6deg)
 
     retVal = retVal && fabs(destPose.x - currPose.x) < errorDistance;
@@ -130,7 +130,6 @@ void Robot::DriveToPoint(void)
         TeleplotPrint("v", v);
         TeleplotPrint("w", w);
 #endif
-
         // Set the motor efforts
         chassis.SetMotorEfforts(left_Wheel_effort, right_Wheel_effort);
     }
@@ -145,7 +144,7 @@ void Robot::HandleDestination(void)
     point_index ++;
     if (point_index < points.size())
     {
-        delay(60);
+        delay(60); // Probably shuold make not st
         SetDestination(points[point_index]);
     }
     else {
